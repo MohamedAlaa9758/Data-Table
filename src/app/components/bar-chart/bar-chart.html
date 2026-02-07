@@ -1,0 +1,47 @@
+<!-- bar-chart.component.html -->
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Number of countries on each continent 📊</h2>
+
+  <div class="chart-container">
+    <div class="chart-wrapper">
+      @for (item of continentData(); track item.continent) {
+        <div class="bar-item">
+          <div class="bar-wrapper">
+            <div
+              class="bar"
+              [style.height.%]="getBarHeight(item.count)"
+              [style.background-color]="getBarColor($index)"
+              [title]="item.continent + ': ' + item.count + ' دولة'"
+            >
+              <span class="count-label">{{ item.count }}</span>
+            </div>
+          </div>
+          <div class="continent-label">{{ item.continent }}</div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="table-responsive mt-5">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Continent</th>
+          <th>Number of countries</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of continentData(); track item.continent; let i = $index) {
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.continent }}</td>
+            <td>
+              <strong>{{ item.count }}</strong>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

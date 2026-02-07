@@ -1,0 +1,19 @@
+.navbar-nav {
+  display: flex;
+  /* display; */
+  flex-direction: row;
+}
+.nav-link {
+  display: contents;
+}
+.ul-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: end;
+}
+@media (min-width: 987px) {
+  .ul-center {
+    align-items: center;
+  }
+}

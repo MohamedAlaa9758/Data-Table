@@ -1,0 +1,126 @@
+<div class="container-md my-5 py-4">
+  <div class="row">
+    <div class="inner">
+      <div class="d-flex gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <h4>Rows per pages :</h4>
+          <select
+            class="form-select w-auto my-2"
+            aria-label="Default select example"
+            (change)="onPageSizeChange($event)"
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+        <div class="d-flex my-3 justify-content-center gap-4">
+          <div>
+            <input type="text" placeholder="Filter Name..." [(ngModel)]="filterName" />
+            <i class="bi bi-filter"></i>
+          </div>
+          <div>
+            <input type="text" placeholder="Filter Country..." [(ngModel)]="filterCountry" />
+            <i class="bi bi-filter"></i>
+          </div>
+        </div>
+      </div>
+
+      <table class="w-100 table table-bordered table-striped shadow shadow-md">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th (click)="sortBy('name')" style="cursor: pointer">
+              Name
+              @if (sortField() === 'name' && sortDirection() === 'asc') {
+                <i class="bi bi-arrow-down-circle"> </i>
+              } @else {
+                <i class="bi bi-arrow-up-circle"> </i>
+              }
+            </th>
+            <th (click)="sortBy('continents')" style="cursor: pointer">
+              Country
+              @if (sortField() === 'continents' && sortDirection() === 'asc') {
+                <i class="bi bi-arrow-down-circle"> </i>
+              } @else {
+                <i class="bi bi-arrow-up-circle"> </i>
+              }
+            </th>
+            <th>Currency</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of userList(); track $index) {
+            <tr
+              (click)="detailsUser(item)"
+              (dblclick)="openUpdateModal(item)"
+              [class.selected]="selectUser() === item"
+            >
+              <td>{{ currentPage() * pageSize() + $index + 1 }}</td>
+              <td>{{ item.name.common }}</td>
+              <td>{{ item.continents }}</td>
+              <td>{{ getCurrency(item) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="w-100 text-center">
+      <span class="h5">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+    </div>
+    <div class="d-flex justify-content-center gap-2 mt-3">
+      <button class="btn btn-secondary" (click)="prevPage()" [disabled]="currentPage() === 0">
+        Prev
+      </button>
+
+      <button
+        class="btn btn-primary"
+        (click)="nextPage()"
+        [disabled]="(currentPage() + 1) * pageSize() >= allUsers().length"
+      >
+        Next
+      </button>
+    </div>
+    @if (selectUser() !== null) {
+      <div
+        class="d-flex justify-content-between align-items-end w-50 mx-auto my-2 rounded rounded-3 p-3 shadow shadow-md border border-1"
+      >
+        <div class="">
+          <h5>Name : {{ selectUser().name.common }}</h5>
+          <h5>Country : {{ selectUser().continents }}</h5>
+          <h5>Capital : {{ selectUser().capital }}</h5>
+          <h5>Currency : {{ getCurrency(selectUser()) }}</h5>
+        </div>
+        <button class="btn btn-danger btn-md" (click)="confirmDelete()">Delete</button>
+      </div>
+    }
+  </div>
+</div>
+
+@if (isModalOpen()) {
+  <div class="modal-backdrop">
+    <div class="modal-content p-3">
+      <h4>Update User</h4>
+      <label>Name:</label>
+      <input [(ngModel)]="editUser().name.common" class="form-control mb-2" />
+
+      <label>Continent:</label>
+      <input [(ngModel)]="editUser().continents[0]" class="form-control mb-2" />
+
+      <label>Capital:</label>
+      <input [(ngModel)]="editUser().capital[0]" class="form-control mb-2" />
+
+      <label>Currency:</label>
+      <select [(ngModel)]="editUser().currenciesText" class="form-control mb-2">
+        @for (item of allOptionCurrency(); track $index) {
+          <option [value]="item">{{ item }}</option>
+        }
+      </select>
+      <div class="d-flex gap-2">
+        <button class="btn btn-success btn-sm" (click)="saveUpdate()">Save</button>
+        <button class="btn btn-secondary btn-sm" (click)="isModalOpen.set(false)">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
