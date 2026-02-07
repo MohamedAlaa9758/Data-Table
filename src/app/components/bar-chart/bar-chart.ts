@@ -10,11 +10,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './bar-chart.css',
 })
 export class BarChart implements OnInit {
-  // ✅ تأكد إن الاسم هنا BarChart
   http = inject(HttpClient);
   allCountries = signal<any[]>([]);
 
-  // ✅ هنا الـ continentData
   continentData = computed(() => {
     const countries = this.allCountries();
     const continentCount: { [key: string]: number } = {};

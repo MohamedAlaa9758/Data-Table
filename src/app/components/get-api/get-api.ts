@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 // import { FormsModule } from '@angular/material/icon';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap/pagination';
 
 @Component({
   selector: 'app-get-api',
@@ -18,6 +19,7 @@ export class GetApi implements OnInit {
   sortField = signal<string | null>(null);
   sortDirection = signal<'asc' | 'desc'>('asc');
   filterText = signal<string>('');
+  noDataFound = false;
   sortBy(field: string) {
     if (this.sortField() === field) {
       this.sortDirection.set(this.sortDirection() === 'asc' ? 'desc' : 'asc');
@@ -40,18 +42,18 @@ export class GetApi implements OnInit {
     const filterCountryData = this.filterCountry().toLowerCase();
 
     if (filterNameData) {
-      data = data.filter((user) => {
-        const name = user.name.common.toLowerCase();
-        return name.includes(filterNameData);
-      });
+      data = data.filter((user) =>
+        user.name.common.toLowerCase().includes(filterNameData.toLowerCase()),
+      );
     }
 
     if (filterCountryData) {
       data = data.filter((user) => {
-        const countrys = user.continents?.join(', ').toLowerCase() || '';
-        return countrys.includes(filterCountryData);
+        const countries = user.continents?.join(', ').toLowerCase() || '';
+        return countries.includes(filterCountryData.toLowerCase());
       });
     }
+    this.noDataFound = !!(filterNameData || filterCountryData) && data.length === 0;
     if (field) {
       data.sort((a, b) => {
         const valA = field === 'name' ? a.name.common : a[field];

@@ -1,7 +1,17 @@
 <div class="container-md my-5 py-4">
   <div class="row">
     <div class="inner">
-      <div class="d-flex gap-3">
+      <div class="d-flex justify-content-between">
+        <div class="d-flex my-3 gap-4">
+          <div>
+            <input type="text" placeholder="Filter Name..." [(ngModel)]="filterName" />
+            <i class="bi bi-filter"></i>
+          </div>
+          <div>
+            <input type="text" placeholder="Filter Country..." [(ngModel)]="filterCountry" />
+            <i class="bi bi-filter"></i>
+          </div>
+        </div>
         <div class="d-flex align-items-center gap-2">
           <h4>Rows per pages :</h4>
           <select
@@ -15,18 +25,14 @@
             <option value="20">20</option>
           </select>
         </div>
-        <div class="d-flex my-3 justify-content-center gap-4">
-          <div>
-            <input type="text" placeholder="Filter Name..." [(ngModel)]="filterName" />
-            <i class="bi bi-filter"></i>
-          </div>
-          <div>
-            <input type="text" placeholder="Filter Country..." [(ngModel)]="filterCountry" />
-            <i class="bi bi-filter"></i>
+      </div>
+      @if (noDataFound) {
+        <div class="card shadow shadow-sm m-3 text-capitalize">
+          <div class="card-body">
+            <h2 class="text-danger mb-0">This value is not found in the table.</h2>
           </div>
         </div>
-      </div>
-
+      }
       <table class="w-100 table table-bordered table-striped shadow shadow-md">
         <thead>
           <tr>
@@ -66,14 +72,12 @@
         </tbody>
       </table>
     </div>
-    <div class="w-100 text-center">
-      <span class="h5">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
-    </div>
-    <div class="d-flex justify-content-center gap-2 mt-3">
+
+    <div class="d-flex gap-3 align-items-center justify-content-center">
       <button class="btn btn-secondary" (click)="prevPage()" [disabled]="currentPage() === 0">
         Prev
       </button>
-
+      <span class="h5">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
       <button
         class="btn btn-primary"
         (click)="nextPage()"
@@ -82,6 +86,7 @@
         Next
       </button>
     </div>
+
     @if (selectUser() !== null) {
       <div
         class="d-flex justify-content-between align-items-end w-50 mx-auto my-2 rounded rounded-3 p-3 shadow shadow-md border border-1"
